@@ -20,11 +20,11 @@ export default function Footer() {
                 <FaLinkedin />
               </a>
 
-              <a href="https://wa.me/222XXXXXXXX" target="_blank" className="hover:text-white transition-colors">
+              <a href="https://wa.me/22247185763" target="_blank" className="hover:text-white transition-colors">
                 <FaWhatsapp />
               </a>
 
-              <a href="https://x.com" target="_blank" className="hover:text-white transition-colors">
+              <a href="https://x.com/abdelkaderous?s=21" target="_blank" className="hover:text-white transition-colors">
                 <FaXTwitter />
               </a>
 
