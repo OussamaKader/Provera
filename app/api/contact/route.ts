@@ -1,22 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server'
-import nodemailer from 'nodemailer'
-import DOMPurify from 'isomorphic-dompurify'
+import { Resend } from 'resend'
 
-// Validation functions
 function validateEmail(email: string): boolean {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
   return emailRegex.test(email)
 }
 
 function sanitizeInput(input: string): string {
-  return DOMPurify.sanitize(input, { ALLOWED_TAGS: [] }).trim()
+  return input.replace(/<[^>]*>/g, '').trim()
 }
 
 export async function POST(request: NextRequest) {
   try {
     const { name, email, message, service } = await request.json()
 
-    // Validate required fields
     if (!name || !email || !message || !service) {
       return NextResponse.json(
         { error: 'Tous les champs sont requis' },
@@ -24,13 +21,11 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Sanitize inputs
     const cleanName = sanitizeInput(name)
     const cleanEmail = email.trim().toLowerCase()
     const cleanMessage = sanitizeInput(message)
     const cleanService = sanitizeInput(service)
 
-    // Validate email format
     if (!validateEmail(cleanEmail)) {
       return NextResponse.json(
         { error: 'Adresse email invalide' },
@@ -38,7 +33,6 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Validate input lengths
     if (cleanName.length < 2 || cleanName.length > 100) {
       return NextResponse.json(
         { error: 'Le nom doit contenir entre 2 et 100 caractères' },
@@ -53,26 +47,10 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Validate service - accept services with prefix (e.g., "CV - Standard", "Services IT - Web")
-    if (!cleanService || cleanService.length === 0) {
-      return NextResponse.json(
-        { error: 'Service invalide' },
-        { status: 400 }
-      )
-    }
+    const resend = new Resend(process.env.RESEND_API_KEY)
 
-    // Create transporter
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      },
-    })
-
-    // Email content with sanitized data
-    const mailOptions = {
-      from: process.env.EMAIL_USER,
+    const emailResponse = await resend.emails.send({
+      from: 'onboarding@resend.dev',
       to: 'oussamamedlemine167@gmail.com',
       subject: `Nouvelle demande: ${cleanService}`,
       html: `
@@ -83,16 +61,21 @@ export async function POST(request: NextRequest) {
         <p><strong>Message:</strong></p>
         <p>${cleanMessage.replace(/\n/g, '<br>')}</p>
         <hr>
-        <p><small>Cet email a été envoyé depuis le formulaire de contact du site web.</small></p>
+        <p><small>Envoyé depuis le formulaire de contact de provera.one</small></p>
       `,
-    }
+    })
 
-    // Send email
-    await transporter.sendMail(mailOptions)
+    if (emailResponse.error) {
+      console.error('Erreur Resend:', emailResponse.error)
+      return NextResponse.json(
+        { error: 'Erreur lors de l\'envoi du message' },
+        { status: 500 }
+      )
+    }
 
     return NextResponse.json({ message: 'Message envoyé avec succès' })
   } catch (error) {
-    console.error('Erreur lors de l\'envoi de l\'email:', error)
+    console.error('Erreur envoi email:', error)
     return NextResponse.json(
       { error: 'Erreur lors de l\'envoi du message' },
       { status: 500 }
