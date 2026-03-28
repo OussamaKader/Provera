@@ -53,9 +53,8 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Validate service
-    const allowedServices = ['CV', 'PFE', 'Services Web', 'Contact général']
-    if (!allowedServices.includes(cleanService)) {
+    // Validate service - accept services with prefix (e.g., "CV - Standard", "Services IT - Web")
+    if (!cleanService || cleanService.length === 0) {
       return NextResponse.json(
         { error: 'Service invalide' },
         { status: 400 }
