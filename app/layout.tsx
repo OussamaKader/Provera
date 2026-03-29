@@ -8,42 +8,49 @@ const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: {
-    default: 'Velora - Services Digitaux Professionnels',
-    template: '%s | Velora'
+    default: 'Provera - Services Digitaux Professionnels',
+    template: '%s | Provera'
   },
   description: 'Services digitaux professionnels : création de CV, projets PFE, développement web et mobile. Solutions sur mesure pour étudiants et professionnels.',
   keywords: ['CV', 'PFE', 'services web', 'développement', 'Maroc', 'étudiants', 'professionnels'],
-  authors: [{ name: 'Velora' }],
-  creator: 'Velora',
-  publisher: 'Velora',
+  authors: [{ name: 'Provera' }],
+  creator: 'Provera',
+  publisher: 'Provera',
   formatDetection: {
     email: false,
     address: false,
     telephone: false,
   },
-  metadataBase: new URL('https://velora.ma'), // Remplacer par votre domaine
+  metadataBase: new URL('https://www.provera.one/'),
   alternates: {
     canonical: '/',
   },
+
+  // ✅ Favicon uniquement
+  icons: {
+    icon: '/favicon.ico',
+    shortcut: '/favicon.ico',
+  },
+
   openGraph: {
     type: 'website',
     locale: 'fr_MA',
-    url: 'https://velora.ma',
-    title: 'Velora - Services Digitaux Professionnels',
+    url: 'https://www.provera.one/',
+    title: 'Provera - Services Digitaux Professionnels',
     description: 'Services digitaux professionnels : création de CV, projets PFE, développement web et mobile.',
-    siteName: 'Velora',
+    siteName: 'Provera',
     images: [
       {
-        url: '/og-image.jpg', // Ajouter une image Open Graph
+        url: '/og-image.jpg',
         width: 1200,
         height: 630,
-        alt: 'Velora - Services Digitaux',
+        alt: 'Provera - Services Digitaux',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Velora - Services Digitaux Professionnels',
+    title: 'Provera - Services Digitaux Professionnels',
     description: 'Services digitaux professionnels : création de CV, projets PFE, développement web et mobile.',
     images: ['/og-image.jpg'],
   },
@@ -59,7 +66,7 @@ export const metadata: Metadata = {
     },
   },
   verification: {
-    google: 'votre-code-google-site-verification', // Ajouter votre code de vérification Google
+    google: 'votre-code-google-site-verification',
   },
 }
 
